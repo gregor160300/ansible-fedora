@@ -1,0 +1,16 @@
+- name: Install Snap package manager
+  dnf:
+    name: snapd
+    state: present
+
+- name: Enable classic snap support by creating a symbolic link
+  file:
+    src: /var/lib/snapd/snap
+    dest: /snap
+    state: link
+
+- name: Enable and start snapd service
+  service:
+    name: snapd
+    state: started
+    enabled: yes

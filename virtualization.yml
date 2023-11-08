@@ -1,0 +1,10 @@
+- name: Install virtualization group packages
+  dnf:
+    name: "@virtualization"
+    state: present
+
+- name: Enable and start libvirtd service
+  service:
+    name: libvirtd
+    state: started
+    enabled: yes

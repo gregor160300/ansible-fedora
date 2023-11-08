@@ -1,0 +1,19 @@
+- name: Update all packages to the latest version
+  dnf:
+    name: "*"
+    state: latest
+
+- name: Remove unwanted applications
+  dnf:
+    name:
+      - gnome-tour
+      - libreoffice*
+      - gnome-maps
+      - totem
+      - rhythmbox
+      - mediawriter
+    state: absent
+
+- name: Remove unused dependencies
+  dnf:
+    autoremove: yes

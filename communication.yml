@@ -1,0 +1,38 @@
+- name: Install Zoom
+  dnf:
+    name: https://zoom.us/client/latest/zoom_x86_64.rpm
+    state: present
+
+- name: Install ProtonVPN
+  block:
+    - name: Add the ProtonVPN repository
+      get_url:
+        url: https://protonvpn.com/download/protonvpn-stable-release-1.0.1-1.noarch.rpm
+        dest: /tmp/protonvpn-stable-release.rpm
+    - name: Install ProtonVPN release package
+      dnf:
+        name: /tmp/protonvpn-stable-release.rpm
+        state: present
+    - name: Install ProtonVPN
+      dnf:
+        name: protonvpn
+        state: present
+    - name: Install Python3-pip and other ProtonVPN dependencies
+      dnf:
+        name:
+          - python3-pip
+          - libappindicator-gtk3
+        state: present
+    - name: Install dnspython via pip
+      pip:
+        name: dnspython
+        state: present
+    - name: Clean up ProtonVPN release package
+      file:
+        path: /tmp/protonvpn-stable-release.rpm
+        state: absent
+
+- name: Install Tailscale
+  dnf:
+    name: tailscale
+    state: present

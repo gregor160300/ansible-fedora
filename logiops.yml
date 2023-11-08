@@ -1,0 +1,46 @@
+- name: Install qt5ct
+  dnf:
+    name: qt5-qtct
+    state: present
+
+- name: Configure qt5ct
+  copy:
+    dest: "/etc/environment"
+    content: |
+      QT_QPA_PLATFORMTHEME=qt5ct
+    backup: yes
+
+- name: Install logiops
+  dnf:
+    name: logiops
+    state: present
+
+- name: Configure logiops
+  block:
+    - name: Create logiops configuration directory
+      file:
+        path: /etc/logid
+        state: directory
+        mode: "0755"
+
+    - name: Add logiops configuration file
+      copy:
+        dest: "/etc/logid/logid.cfg"
+        content: |
+          devices: ({
+            # Example configuration
+            # You'll need to replace this with your actual configuration
+            name: "Wireless Mouse MX Master";
+            smartshift:
+            {
+              on: true;
+              threshold: 10;
+            };
+            hiresscroll:
+            {
+              hires: true;
+              invert: false;
+              target: false;
+            };
+          });
+        mode: "0644"

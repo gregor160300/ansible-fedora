@@ -1,0 +1,24 @@
+---
+- name: Install Codecs
+  import_playbook: codecs.yml
+
+- name: Install Communication Applications
+  import_playbook: communication.yml
+
+- name: Install Browsers
+  import_playbook: browsers.yml
+
+- name: Install Firefox Nightly
+  import_playbook: firefox_nightly.yml
+
+- name: Virtualization Support
+  import_playbook: virtualization.yml
+
+- name: System Update and Cleanup
+  import_playbook: system_configuration.yml
+
+- name: Install Snap and Other Applications
+  import_playbook: snap_and_others.yml
+
+- name: Install logiops
+  import_playbook: logiops.yml

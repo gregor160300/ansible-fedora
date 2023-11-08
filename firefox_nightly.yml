@@ -1,0 +1,67 @@
+- name: Download Firefox Nightly
+  get_url:
+    url: "https://download.mozilla.org/?product=firefox-nightly-latest-ssl&os=linux64&lang=en-US"
+    dest: "/tmp/firefox-nightly.tar.bz2"
+    mode: "0755"
+
+- name: Create directory for Firefox Nightly
+  file:
+    path: "/opt/firefox"
+    state: directory
+    mode: "0755"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+
+- name: Extract Firefox Nightly
+  unarchive:
+    src: "/tmp/firefox-nightly.tar.bz2"
+    dest: "/opt/firefox"
+    remote_src: yes
+    creates: "/opt/firefox/firefox-bin"
+
+- name: Remove the downloaded tarball
+  file:
+    path: "/tmp/firefox-nightly.tar.bz2"
+    state: absent
+
+- name: Create desktop entry for Firefox Nightly
+  copy:
+    dest: "~/.local/share/applications/firefox-nightly.desktop"
+    content: |
+      [Desktop Entry]
+      Version=1.0
+      Name=Firefox Nightly
+      Exec=env MOZ_ENABLE_WAYLAND=1 /opt/firefox/firefox-bin --name=firefox-nightly -P nightly %u
+      Icon=firefox-nightly
+      Terminal=false
+      Type=Application
+      MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
+      Categories=Network;WebBrowser;
+      Keywords=web;browser;internet;
+      StartupNotify=true
+      StartupWMClass=firefox-nightly
+
+- name: Set up Firefox Nightly icons
+  block:
+    - name: Create icon directory
+      file:
+        path: "~/.local/share/icons/hicolor/{{ item }}/apps"
+        state: directory
+      with_items:
+        - "16x16"
+        - "32x32"
+        - "48x48"
+        - "64x64"
+        - "128x128"
+
+    - name: Link icons to correct path
+      file:
+        src: "/opt/firefox/browser/chrome/icons/default/default{{ item.split('x')[0] }}.png"
+        dest: "~/.local/share/icons/hicolor/{{ item }}/apps/firefox-nightly.png"
+        state: link
+      with_items:
+        - "16x16"
+        - "32x32"
+        - "48x48"
+        - "64x64"
+        - "128x128"

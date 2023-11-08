@@ -1,0 +1,31 @@
+---
+- name: Setup Fedora Workstation
+  hosts: localhost
+  connection: local
+  become: yes
+  tasks:
+    - name: Install RPM Fusion repositories
+      dnf:
+        name:
+          - https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-{{ ansible_distribution_major_version }}.noarch.rpm
+          - https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-{{ ansible_distribution_major_version }}.noarch.rpm
+        state: present
+
+    - name: Update multimedia packages
+      dnf:
+        name: "@multimedia"
+        state: present
+        group_package_manager: dnf
+
+    - name: Exclude PackageKit-gstreamer-plugin
+      dnf:
+        name: "@multimedia"
+        state: present
+        exclude: PackageKit-gstreamer-plugin
+        group_package_manager: dnf
+
+    - name: Update sound and video groups
+      dnf:
+        name: "@sound-and-video"
+        state: present
+        group_package_manager: dnf

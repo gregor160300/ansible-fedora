@@ -1,0 +1,42 @@
+- name: Install Google Chrome Unstable
+  block:
+    - name: Enable Google Chrome repository from Fedora repos
+      dnf:
+        name: fedora-workstation-repositories
+        state: present
+    - name: Set Google Chrome repo to enabled
+      command: dnf config-manager --set-enabled google-chrome
+    - name: Install Google Chrome Unstable and GNOME Shell integration
+      dnf:
+        name:
+          - google-chrome-unstable
+          - chrome-gnome-shell
+        state: present
+
+- name: Install Visual Studio Code
+  block:
+    - name: Import Microsoft GPG key
+      rpm_key:
+        state: present
+        key: https://packages.microsoft.com/keys/microsoft.asc
+    - name: Add Visual Studio Code repository
+      lineinfile:
+        path: /etc/yum.repos.d/vscode.repo
+        line: |
+          [code]
+          name=Visual Studio Code
+          baseurl=https://packages.microsoft.com/yumrepos/vscode
+          enabled=1
+          gpgcheck=1
+          gpgkey=https://packages.microsoft.com/keys/microsoft.asc
+        create: yes
+    - name: Install Visual Studio Code
+      dnf:
+        name: code
+        state: present
+
+- name: Install Microsoft Edge Dev
+  dnf:
+    name: microsoft-edge-dev
+    state: present
+    enablerepo: "packages-microsoft-com-edge"
